@@ -1,28 +1,27 @@
 const ArtistModel = require("../models/artist.model");
 const ObjectID = require("mongoose").Types.ObjectId;
 
-module.exports.getArtists = (req, res) => {
-    ArtistModel.find((err, docs) => {
-      if (!err) res.send(docs);
-      else console.log("Error to get data : " + err);
-    }).sort({ createdAt: -1 });
+module.exports.getArtists = async (req, res) => {
+    const artists = await ArtistModel.find().sort({ createdAt: -1 });
+    res.status(200).json(artists);
   };
 
   module.exports.createArtist = async (req, res) => {
     
-    const newArtist = new ArtistModel({
-        artistId: req.body.artistId,
-        name: req.body.name,
-        genre: req.body.name,
-        song: req.body.song
-      });
+    const { name, genre, song } = req.body
 
-      try {
-        const artist = await newArtist.save();
-        return res.status(201).json(artist);
-      } catch (err) {
-        return res.status(400).send(err);
-      }
+  try {
+    const artist = await ArtistModel.create({ name, genre, song });
+    res.status(201).json({ 
+      artist: artist._id,
+      name: artist.name,
+      genre: artist.genre,
+      song: artist.song
+    });
+  }
+  catch(err) {
+    res.status(200).send(err)
+  }
   };
 
   module.exports.updateArtist = (req, res) => {
@@ -30,8 +29,6 @@ module.exports.getArtists = (req, res) => {
     return res.status(400).send("ID unknown : " + req.params.id);
 
   const updatedArtist = {
-    message: req.body.message,
-    genre: req.body.name,
     song: req.body.song
   };
 

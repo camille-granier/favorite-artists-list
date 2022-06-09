@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: false }));
 
 
 //route
-app.use('/api/artists', artistRoutes);
+app.use('/api/artist', artistRoutes);
 
 //server
 app.listen(process.env.PORT, () => {
