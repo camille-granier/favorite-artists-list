@@ -3,10 +3,23 @@ require('dotenv').config({path: './Config/.env'})
 require('./Config/dbConfig.js');
 const artistRoutes = require('./routes/artists.routes');
 const artistController = require('./controllers/artist.controller');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+//cors
+const corsOptions = {
+   origin: process.env.CLIENT_URL,
+   credentials: true,
+   'allowedHeaders': ['sessionId', 'Content-Type'],
+   'exposedHeaders': ['sessionId'],
+   'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+   'preflightContinue': false
+ }
+
+ app.use(cors(corsOptions));
 
 
 //route
